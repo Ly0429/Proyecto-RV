@@ -35,16 +35,31 @@ controls.maxPolarAngle = Math.PI / 2;
 // LUCES
 scene.add(new THREE.AmbientLight(0xffffff, 0.15));
 
+//-----------------------------------------------------------------------------------------------
+//Luces 
 
 const coloresLuces = [0xff0000, 0x00ff00, 0x0000ff, 0xffff00, 0xff00ff, 0x00ffff];
 
 for (let i = 0; i < 8; i++) {
     const luzNavidad = new THREE.PointLight(coloresLuces[i % coloresLuces.length], 50000, 300);
     // Las posicionamos repartidas a lo largo de la pared (pared1 está en z: -500)
-    luzNavidad.position.set(-350 + (i * 100), 300, -480); 
+    luzNavidad.position.set(-350 + (i * 100), 300, -487);
     scene.add(luzNavidad);
 
     // Opcional: Una esfera pequeña para ver de dónde viene la luz
+    const focoGeo = new THREE.SphereGeometry(5, 16, 16);
+    const focoMat = new THREE.MeshBasicMaterial({ color: coloresLuces[i % coloresLuces.length] });
+    const foco = new THREE.Mesh(focoGeo, focoMat);
+    foco.position.copy(luzNavidad.position);
+    scene.add(foco);
+}
+
+// FILA DE ABAJO
+for (let i = 0; i < 8; i++) {
+    const luzNavidad = new THREE.PointLight(coloresLuces[i % coloresLuces.length], 50000, 300);
+    luzNavidad.position.set(-350 + (i * 100), 180, -490); // altura más baja
+    scene.add(luzNavidad);
+
     const focoGeo = new THREE.SphereGeometry(5, 16, 16);
     const focoMat = new THREE.MeshBasicMaterial({ color: coloresLuces[i % coloresLuces.length] });
     const foco = new THREE.Mesh(focoGeo, focoMat);
@@ -79,14 +94,12 @@ Piso.position.y = -2.5;
 Piso.receiveShadow = true;
 scene.add(Piso);
 //--------------------------------------------------------------------------------------
-
-
 // pared1
 const pared1 = new THREE.Mesh(
     new THREE.BoxGeometry(878, 400, 5),
     new THREE.MeshStandardMaterial({
-        map: StrangerTexture,
-        roughness: 0.9
+        color: 0x808080,
+        roughness: 0.3
     })
 );
 
@@ -96,10 +109,28 @@ pared1.receiveShadow = true;
 scene.add(pared1);
 
 
+//--------------------------------------------------------------------------------------
+// stranger
+
+const stranger = new THREE.Mesh(
+    new THREE.PlaneGeometry(878, 292, 5),
+    new THREE.MeshStandardMaterial({
+        map: StrangerTexture,
+        roughness: 0.3
+    })
+);
+
+stranger.position.set(0, 256, -496); // atrás de la escena
+stranger.receiveShadow = true;
+
+scene.add(stranger);
+
+
 
 StrangerTexture.wrapS = THREE.RepeatWrapping;
 StrangerTexture.wrapT = THREE.RepeatWrapping;
 StrangerTexture.repeat.set(1, 1);
+
 //--------------------------------------------------------------------------------------
 // pared2
 const pared2 = new THREE.Mesh(
