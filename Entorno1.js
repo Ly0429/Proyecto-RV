@@ -73,9 +73,10 @@ scene.fog = new THREE.FogExp2(0x000000, 0.0008);
 //Texturas
 // Cargar textura
 const loader = new THREE.TextureLoader();
-const netflixTexture = loader.load('netflix.jpg'); // asegúrate que la ruta sea correcta
+const netflixTexture = loader.load('netflix.jpg');
 
 const StrangerTexture = loader.load('Stranger.jpg');
+const tapizTexture = loader.load('tapiz.jpg');
 //--------------------------------------------------------------------------------------
 //GEOMETRIAS
 
@@ -99,6 +100,7 @@ const pared1 = new THREE.Mesh(
     new THREE.BoxGeometry(878, 400, 5),
     new THREE.MeshStandardMaterial({
         color: 0x808080,
+        metalness: 0.6,
         roughness: 0.3
     })
 );
@@ -125,11 +127,30 @@ stranger.receiveShadow = true;
 
 scene.add(stranger);
 
-
-
 StrangerTexture.wrapS = THREE.RepeatWrapping;
 StrangerTexture.wrapT = THREE.RepeatWrapping;
 StrangerTexture.repeat.set(1, 1);
+
+//--------------------------------------------------------------------------------------
+// tapiz
+
+const tapiz = new THREE.Mesh(
+    new THREE.PlaneGeometry(878, 110, 5),
+    new THREE.MeshStandardMaterial({
+        map: tapizTexture,
+        color: 0x472828,
+        roughness: 0.9
+    })
+);
+
+tapiz.position.set(0, 50, -496); // atrás de la escena
+tapiz.receiveShadow = true;
+
+scene.add(tapiz);
+
+tapizTexture.wrapS = THREE.RepeatWrapping;
+tapizTexture.wrapT = THREE.RepeatWrapping;
+tapizTexture.repeat.set(5, 1);
 
 //--------------------------------------------------------------------------------------
 // pared2
