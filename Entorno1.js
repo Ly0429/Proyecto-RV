@@ -48,8 +48,7 @@ controls.maxDistance = 1500;
 controls.minDistance = 50;
 controls.maxPolarAngle = Math.PI / 2;
 
-//--------------------------
-let dartModel;
+
 
 //--------------------------------------------------------------------------------------
 
@@ -482,7 +481,7 @@ pantallac4.position.set(360, 150, 480);
 scene.add(pantallac4);
 //----------------------------------------------------------------------------------------
 // Mesa
-
+const textureMesa = loader.load("./mesa.jpg");
 // crear grupo de la mesa
 const mesa = new THREE.Group();
 scene.add(mesa);
@@ -491,6 +490,7 @@ scene.add(mesa);
 const tablero = new THREE.Mesh(
     new THREE.BoxGeometry(120, 8, 80),
     new THREE.MeshStandardMaterial({
+        map: textureMesa,
         color: 0x8B4513,
         roughness: 0.6
     })
@@ -503,6 +503,7 @@ mesa.add(tablero);
 // geometría patas
 const pataGeometry = new THREE.BoxGeometry(8, 60, 8);
 const pataMaterial = new THREE.MeshStandardMaterial({
+    map: textureMesa,
     color: 0x5a2d0c
 });
 
@@ -935,14 +936,14 @@ scene.add(alfombra);
 const mesita = new THREE.Mesh(
     new THREE.BoxGeometry(870, 5, 1000),
     new THREE.MeshStandardMaterial({
-        color: 0x4F1313,
+        map: textureMesa,
         metalness: 0.2,
         roughness: 0.3
     })
 );
 
 mesita.position.set(100, 19, 0);
-mesita.scale.set(0.2, 8, 0.2);
+mesita.scale.set(0.3, 8, 0.2);
 mesita.receiveShadow = true;
 scene.add(mesita);
 
@@ -963,7 +964,7 @@ const vidriom = new THREE.Mesh(
 );
 
 vidriom.position.set(100, 72, 0);
-vidriom.scale.set(0.2, 13, 0.2);
+vidriom.scale.set(0.3, 13, 0.2);
 vidriom.receiveShadow = true;
 scene.add(vidriom);
 
@@ -973,11 +974,14 @@ scene.add(vidriom);
 // Cargar modelo 1
 const loaderdart = new FBXLoader();
 
-
+let dartModel;
 
 loaderdart.load("./Dart.fbx", function (object1) {
-    object1.scale.set(0.4, 0.4, 0.2);
-    object1.position.set(50, 50, 0);
+
+    dartModel = object1;
+
+    object1.scale.set(0.3, 0.4, 0.2);
+    object1.position.set(100, 50, 0);
     object1.rotation.set(0, 0, 0);
 
     object1.traverse(function (child) {
@@ -1131,9 +1135,10 @@ function animate() {
 
     requestAnimationFrame(animate);
 
-    if (demoModel) {
-    demoModel.rotation.y += 0.01;
-}
+    if (dartModel) {
+        dartModel.rotation.y -= 0.02;
+    }
+
     controls.update();
     renderer.render(scene, camera);
 }
