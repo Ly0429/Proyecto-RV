@@ -57,7 +57,7 @@ for (let i = 0; i < 8; i++) {
 // FILA DE ABAJO
 for (let i = 0; i < 8; i++) {
     const luzNavidad = new THREE.PointLight(coloresLuces[i % coloresLuces.length], 50000, 300);
-    luzNavidad.position.set(-350 + (i * 100), 180, -490); 
+    luzNavidad.position.set(-350 + (i * 100), 180, -490);
     scene.add(luzNavidad);
 
     const focoGeo = new THREE.SphereGeometry(5, 16, 16);
@@ -77,7 +77,8 @@ const netflixTexture = loader.load('netflix.jpg');
 
 const StrangerTexture = loader.load('Stranger.jpg');
 const tapizTexture = loader.load('tapiz.jpg');
-const sofa1Texture = loader.load('sofa1.jpg');
+const texture1Texture = loader.load('texture1.jpg');
+const texture2Texture = loader.load('texture2.jpg');
 //--------------------------------------------------------------------------------------
 //GEOMETRIAS
 
@@ -672,15 +673,16 @@ sofa.scale.set(2.5, 2.5, 2.5);
 scene.add(sofa);
 
 */
-
+//------------------------------------------------------------------------------------------------------------------------------
 // Cargar modelo sofa
 const loader1 = new FBXLoader();
 const textureLoader1 = new THREE.TextureLoader();
-const texture1 = textureLoader1.load("./texturas/metalverde.jpg");
+const texture1 = textureLoader1.load("texture1.png");
+const texture2 = textureLoader1.load("texture2.png");
 
 loader1.load("./sofa.fbx", function (object1) {
 
-    
+
     // misma escala del sofá anterior
     object1.scale.set(36, 36, 36);
 
@@ -689,17 +691,28 @@ loader1.load("./sofa.fbx", function (object1) {
     // misma posición del sofá anterior
     object1.position.set(-1400, 0, 2320);
 
-     object1.rotation.set(0, -7.9, 0);
+    object1.rotation.set(0, -7.9, 0);
     // misma rotación
- 
+
     object1.traverse(function (child) {
         if (child.isMesh) {
-            child.material = new THREE.MeshStandardMaterial({
-                color: 0xFA0000,
-                map: texture1,
-                metalness: 0.2,
-                roughness: 0.9
-            });
+
+            if (child.name.toLowerCase().includes("cushion")) {
+                // cojines
+                child.material = new THREE.MeshStandardMaterial({
+                    map: texture1,
+                    metalness: 0,
+                    roughness: 1
+                });
+
+            } else {
+                // resto del sofá
+                child.material = new THREE.MeshStandardMaterial({
+                    map: texture2,
+                    metalness: 0,
+                    roughness: 1
+                });
+            }
 
             child.castShadow = true;
             child.receiveShadow = true;
@@ -707,7 +720,14 @@ loader1.load("./sofa.fbx", function (object1) {
     });
 
     scene.add(object1);
+
+
 })
+//-----------------------------------------------------------------------------------------------------------
+// Demogorgon
+
+
+
 
 
 //----------------------------------------------------------------------------------------
