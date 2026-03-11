@@ -238,6 +238,11 @@ scene.add(soporteTV);
 
 //----------------------------------------------------------------------------------------
 //cuadros
+const p1Texture = loader.load('p1.jpeg');
+const p2Texture = loader.load('p2.jpeg');
+const p3Texture = loader.load('p3.jpeg');
+const p4Texture = loader.load('p4.jpeg');
+
 const cuadro1 = new THREE.Mesh(
     new THREE.BoxGeometry(90, 100, 20),
     new THREE.MeshStandardMaterial({
@@ -252,7 +257,7 @@ scene.add(cuadro1);
 const pantallac = new THREE.Mesh(
     new THREE.BoxGeometry(80, 90, 20),
     new THREE.MeshStandardMaterial({
-        map: netflixTexture,
+        map: p1Texture,
         emissive: 0xffffff,
         emissive: 0x111111
     })
@@ -279,7 +284,7 @@ scene.add(cuadro2);
 const pantallac2 = new THREE.Mesh(
     new THREE.BoxGeometry(80, 90, 20),
     new THREE.MeshStandardMaterial({
-        map: netflixTexture,
+        map: p3Texture,
         emissive: 0xffffff,
         emissive: 0x111111
     })
@@ -303,7 +308,7 @@ scene.add(cuadro3);
 const pantallac3 = new THREE.Mesh(
     new THREE.BoxGeometry(80, 90, 20),
     new THREE.MeshStandardMaterial({
-        map: netflixTexture,
+        map: p4Texture,
         emissive: 0xffffff,
         emissive: 0x111111
     })
@@ -327,7 +332,7 @@ scene.add(cuadro4);
 const pantallac4 = new THREE.Mesh(
     new THREE.BoxGeometry(80, 90, 20),
     new THREE.MeshStandardMaterial({
-        map: netflixTexture,
+        map: p2Texture,
         emissive: 0xffffff,
         emissive: 0x111111
     })
@@ -408,12 +413,14 @@ scene.add(teclado);
 
 //--------------------------------------------------------------------------------------
 // MONITOR 1
+const strangerthingsTexture = loader.load('strangerthings.jpg');
 
 // pantalla
 const monitorPantalla = new THREE.Mesh(
     new THREE.BoxGeometry(180, 100, 5),
     new THREE.MeshStandardMaterial({
-        color: 0x000000,
+        map: strangerthingsTexture,
+        emissive: 0xffffff,
         emissive: 0x111111
     })
 );
@@ -521,12 +528,13 @@ scene.add(cpu);
 
 // ----------------------------------------------------------------------------------------------
 // MONITOR 2
-
+const biciTexture = loader.load('bici.jpg');
 // pantalla
 const monitorPantalla2 = new THREE.Mesh(
     new THREE.BoxGeometry(180, 100, 5),
     new THREE.MeshStandardMaterial({
-        color: 0x000000,
+        map: biciTexture,
+        emissive: 0xffffff,
         emissive: 0x111111
     })
 );
@@ -726,8 +734,43 @@ loader1.load("./sofa.fbx", function (object1) {
 //-----------------------------------------------------------------------------------------------------------
 // Demogorgon
 
+// Cargar modelo 1
+const loaderDemo = new FBXLoader();
+const textureLoader3 = new THREE.TextureLoader();
+const texture3 = textureLoader3.load("./texture3.png");
+const texture4 = textureLoader3.load("./texture4.png");
+
+loaderDemo.load("./Demo.fbx", function (object1) {
+    object1.scale.set(3.2, 3.2, 3.2);
+    object1.position.set(-300, 0, -370);
+    object1.rotation.set(0, 1, 0);
+
+    object1.traverse(function (child) {
+        if (child.isMesh) {
+            child.material = new THREE.MeshStandardMaterial({
+                map: texture3,
+                color: 0x888888,
+                roughness: 0.9,
+                metalness: 0.1,
+                emissive: 0x220000,
+                emissiveIntensity: 0.4
+            });
+
+            child.castShadow = true;
+            child.receiveShadow = true;
+        }
+    });
+
+    scene.add(object1);
+});
 
 
+
+// Una luz cenital (blanca fría) para resaltar músculos
+const luzTerror = new THREE.PointLight(0xeeeeff, 8000, 500);
+luzTerror.position.set(-300, 300, -300);
+luzTerror.castShadow = true;
+scene.add(luzTerror);
 
 
 //----------------------------------------------------------------------------------------
@@ -736,7 +779,7 @@ loader1.load("./sofa.fbx", function (object1) {
 const alfombra = new THREE.Mesh(
     new THREE.BoxGeometry(870, 5, 1000),
     new THREE.MeshStandardMaterial({
-        color: 0x80880,
+        color: 0x404040,
         metalness: 0.2,
         roughness: 0.3
     })
@@ -752,7 +795,7 @@ scene.add(alfombra);
 const mesita = new THREE.Mesh(
     new THREE.BoxGeometry(870, 5, 1000),
     new THREE.MeshStandardMaterial({
-        color: 0x808880,
+        color: 0x4F1313,
         metalness: 0.2,
         roughness: 0.3
     })
@@ -769,8 +812,13 @@ scene.add(mesita);
 const vidriom = new THREE.Mesh(
     new THREE.BoxGeometry(870, 5, 1000),
     new THREE.MeshStandardMaterial({
-        color: 0x808890,
-        emissiveIntensity: 1
+        color: 0xffffff, // Vidrio más claro (blanco puro)
+        transparent: true,
+        opacity: 0.2,    // Más transparente para mayor elegancia
+        roughness: 0.05,  // Superficie perfecta, como un espejo
+        metalness: 0,
+        ior: 1.5,        // Índice de refracción real para el vidrio
+        transmission: 1.0      // Añade un toque de brillo
     })
 );
 
@@ -778,103 +826,145 @@ vidriom.position.set(100, 72, 0);
 vidriom.scale.set(0.2, 13, 0.2);
 vidriom.receiveShadow = true;
 scene.add(vidriom);
-//------------------
+
+
+//----------------------------------------------------------------------------------------------
+
+
+// Cargar modelo 1
+const loaderdart = new FBXLoader();
+
+
+
+loaderdart.load("./Dart.fbx", function (object1) {
+    object1.scale.set(0.4, 0.4, 0.2);
+    object1.position.set(50, 60, 0);
+    object1.rotation.set(0, 0, 0);
+
+    object1.traverse(function (child) {
+        if (child.isMesh) {
+            child.material = new THREE.MeshStandardMaterial({
+                map: texture3,
+                color: 0x888888,
+                roughness: 0.9,
+                metalness: 0.1,
+
+            });
+
+            child.castShadow = true;
+            child.receiveShadow = true;
+        }
+    });
+
+    scene.add(object1);
+});
+
+
+
+
+
+
 //----------------------------------------------------------------------------------------
 
 
 //silla
 
-const silla = new THREE.Mesh(
-    new THREE.BoxGeometry(870, 5, 1000),
-    new THREE.MeshStandardMaterial({
-        color: 0x8080,
-        metalness: 0.2,
-        roughness: 0.3
-    })
-);
+// --- CARGA DE TEXTURA (Usando tu loader existente) ---
+const texturaCuero = loader.load('cuero.jpg');
 
-silla.position.set(-200, 8, 0);
-silla.scale.set(0.1, 2, 0.1);
-silla.receiveShadow = true;
-scene.add(silla);
+texturaCuero.wrapS = THREE.RepeatWrapping;
+texturaCuero.wrapT = THREE.RepeatWrapping;
+texturaCuero.repeat.set(2, 2); 
 
+// --- MATERIALES ---
+const matNegro = new THREE.MeshStandardMaterial({ color: 0x111111, metalness: 0.2, roughness: 0.3 });
+const matMetal = new THREE.MeshStandardMaterial({ color: 0x555555, metalness: 0.8, roughness: 0.2 });
+const matNeon = new THREE.MeshStandardMaterial({ 
+    color: 0x00ffff, 
+    emissive: 0x00ffff, 
+    emissiveIntensity: 1 
+});
 
-//tubo
+// Material Pro con la textura aplicada
+const materialCuero = new THREE.MeshStandardMaterial({
+    map: texturaCuero,
+    color: 0x222222, 
+    roughness: 0.8, 
+    metalness: 0.1 
+});
 
-const tubo = new THREE.Mesh(
-    new THREE.BoxGeometry(870, 5, 1000),
-    new THREE.MeshStandardMaterial({
-        color: 0x8080,
-        metalness: 0.2,
-        roughness: 0.3
-    })
-);
+// --- GRUPO SILLA ---
+const grupoSilla = new THREE.Group();
+scene.add(grupoSilla);
 
+// 1. BASE (Patas)
+for (let i = 0; i < 5; i++) {
+    const pata = new THREE.Mesh(new THREE.BoxGeometry(150, 5, 20), matNegro);
+    const angle = (i / 5) * Math.PI * 2;
+    pata.position.set(-200 + Math.cos(angle) * 40, 8, Math.sin(angle) * 40);
+    pata.rotation.y = -angle;
+    grupoSilla.add(pata);
+}
+
+// 2. SOPORTE Y TUBO
+const baseSilla = new THREE.Mesh(new THREE.BoxGeometry(870, 5, 1000), matNegro);
+baseSilla.position.set(-200, 8, 0);
+baseSilla.scale.set(0.1, 2, 0.1);
+grupoSilla.add(baseSilla);
+
+const tubo = new THREE.Mesh(new THREE.BoxGeometry(870, 5, 1000), matMetal);
 tubo.position.set(-200, 50, 0);
 tubo.scale.set(0.04, 20, 0.04);
-tubo.receiveShadow = true;
-scene.add(tubo);
+grupoSilla.add(tubo);
 
-const silla2 = new THREE.Mesh(
-    new THREE.BoxGeometry(870, 5, 1000),
-    new THREE.MeshStandardMaterial({
-        color: 0x8080,
-        metalness: 0.2,
-        roughness: 0.3
-    })
-);
-
+// 3. ASIENTO (Capas de cuero)
+const silla2 = new THREE.Mesh(new THREE.BoxGeometry(870, 5, 1000), materialCuero);
 silla2.position.set(-200, 80, 0);
 silla2.scale.set(0.06, 2, 0.06);
-silla2.receiveShadow = true;
-scene.add(silla2);
+grupoSilla.add(silla2);
 
-
-
-const silla3 = new THREE.Mesh(
-    new THREE.BoxGeometry(870, 5, 1000),
-    new THREE.MeshStandardMaterial({
-        color: 0x8080,
-        metalness: 0.2,
-        roughness: 0.3
-    })
-);
-
+const silla3 = new THREE.Mesh(new THREE.BoxGeometry(870, 5, 1000), materialCuero);
 silla3.position.set(-200, 90, 0);
 silla3.scale.set(0.09, 2, 0.09);
-silla3.receiveShadow = true;
-scene.add(silla3);
+grupoSilla.add(silla3);
 
-
-
-const silla4 = new THREE.Mesh(
-    new THREE.BoxGeometry(870, 5, 1000),
-    new THREE.MeshStandardMaterial({
-        color: 0x8080,
-        metalness: 0.2,
-        roughness: 0.3
-    })
-);
-
+const silla4 = new THREE.Mesh(new THREE.BoxGeometry(870, 5, 1000), materialCuero);
 silla4.position.set(-200, 100, 0);
 silla4.scale.set(0.12, 2, 0.12);
-silla4.receiveShadow = true;
-scene.add(silla4);
+grupoSilla.add(silla4);
 
-const respaldar = new THREE.Mesh(
-    new THREE.BoxGeometry(870, 5, 1000),
-    new THREE.MeshStandardMaterial({
-        color: 0x8080,
-        metalness: 0.2,
-        roughness: 0.3
-    })
-);
+// 4. LÍNEA GAMER Y LUZ
+const lineaGamer = new THREE.Mesh(new THREE.BoxGeometry(870, 5, 1000), matNeon);
+lineaGamer.position.set(-200, 105, 0);
+lineaGamer.scale.set(0.11, 0.5, 0.11);
+grupoSilla.add(lineaGamer);
 
+const neonLight = new THREE.PointLight(0x00ffff, 1, 150);
+neonLight.position.set(-200, 110, 0);
+grupoSilla.add(neonLight);
+
+// 5. RESPALDAR
+const respaldar = new THREE.Mesh(new THREE.BoxGeometry(870, 5, 1000), materialCuero);
 respaldar.position.set(-200, 150, 80);
 respaldar.scale.set(0.12, 2, 0.12);
-respaldar.rotation.set(90, 0, 0);
-respaldar.receiveShadow = true;
-scene.add(respaldar)
+respaldar.rotation.set(Math.PI / 2, 0, 0);
+grupoSilla.add(respaldar);
+
+// 6. BRAZOS Y COJÍN
+const armGeometry = new THREE.BoxGeometry(20, 40, 60);
+const armL = new THREE.Mesh(armGeometry, materialCuero);
+armL.position.set(-260, 115, 0);
+grupoSilla.add(armL);
+
+const armR = new THREE.Mesh(armGeometry, materialCuero);
+armR.position.set(-140, 115, 0);
+grupoSilla.add(armR);
+
+const cojin = new THREE.Mesh(new THREE.BoxGeometry(80, 40, 20), materialCuero);
+cojin.position.set(-200, 120, 65);
+grupoSilla.add(cojin);
+
+
 
 //-----------------------------------------------------------------------------------------
 //ANIMACION
