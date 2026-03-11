@@ -5,6 +5,24 @@ import { OrbitControls } from "https://esm.sh/three@0.158.0/examples/jsm/control
 const scene = new THREE.Scene();
 //scene.background = new THREE.Color(0x0f172a); // fondo
 
+// SKYBOX
+const cubeLoader = new THREE.CubeTextureLoader();
+
+const textureCube = cubeLoader.setPath('./skybox/').load([
+    'stars_px.jpg',
+    'stars_nx.jpg',
+    'stars_py.jpg',
+    'stars_ny.jpg',
+    'stars_pz.jpg',
+    'stars_nz.jpg'
+]);
+
+scene.background = textureCube;
+const loaderSky = new THREE.TextureLoader();
+const estrellas = loaderSky.load('estrellas.jpg');
+
+scene.background = estrellas;
+
 const camera = new THREE.PerspectiveCamera(
     75,
     window.innerWidth / window.innerHeight,
@@ -30,11 +48,15 @@ controls.maxDistance = 1500;
 controls.minDistance = 50;
 controls.maxPolarAngle = Math.PI / 2;
 
+//--------------------------
+let dartModel;
+
 //--------------------------------------------------------------------------------------
 
 // LUCES
 scene.add(new THREE.AmbientLight(0xffffff, 0.15));
-
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.1);
+scene.add(ambientLight);
 //-----------------------------------------------------------------------------------------------
 //Luces 
 
@@ -82,11 +104,12 @@ const texture2Texture = loader.load('texture2.jpg');
 //--------------------------------------------------------------------------------------
 //GEOMETRIAS
 
-
+const pisoTexture = loader.load('texture2.jpg');
 // Piso
 const Piso = new THREE.Mesh(
     new THREE.BoxGeometry(870, 5, 1000),
     new THREE.MeshStandardMaterial({
+        map: pisoTexture,
         color: 0x808080,
         metalness: 0.2,
         roughness: 0.3
@@ -96,6 +119,32 @@ const Piso = new THREE.Mesh(
 Piso.position.y = -2.5;
 Piso.receiveShadow = true;
 scene.add(Piso);
+
+pisoTexture.wrapS = THREE.RepeatWrapping;
+StrangerTexture.wrapT = THREE.RepeatWrapping;
+StrangerTexture.repeat.set(1, 1);
+//-----------------------------------------------------------------------------
+/* Techo
+const techoTexture = loader.load('texture2.jpg');
+
+const Techo = new THREE.Mesh(
+    new THREE.BoxGeometry(870, 5, 1000), 
+    new THREE.MeshStandardMaterial({
+        map: techoTexture,
+        color: 0x808080,       
+        metalness: 0.1,        
+        roughness: 0.7          
+    })
+);
+
+
+Techo.position.y = 400; 
+Techo.position.x = 0;
+Techo.position.z = 0;
+
+scene.add(Techo);
+*/
+
 //--------------------------------------------------------------------------------------
 // pared1
 const pared1 = new THREE.Mesh(
@@ -185,7 +234,7 @@ const tapiz2 = new THREE.Mesh(
     })
 );
 
-tapiz2.position.set(0, 55, 490); 
+tapiz2.position.set(0, 55, 490);
 tapiz2.rotation.y = Math.PI;
 tapiz2.receiveShadow = true;
 
@@ -206,7 +255,7 @@ const fondo2 = new THREE.Mesh(
     })
 );
 
-fondo2.position.set(0, 256, 490); 
+fondo2.position.set(0, 256, 490);
 fondo2.rotation.y = Math.PI;
 fondo2.receiveShadow = true;
 
@@ -247,7 +296,7 @@ const tapiz3 = new THREE.Mesh(
     })
 );
 
-tapiz3.position.set(-430, 55, 0); 
+tapiz3.position.set(-430, 55, 0);
 tapiz3.rotation.y = Math.PI / 2;
 tapiz3.receiveShadow = true;
 
@@ -268,7 +317,7 @@ const fondo = new THREE.Mesh(
     })
 );
 
-fondo.position.set(-430, 256, 0); 
+fondo.position.set(-430, 256, 0);
 fondo.rotation.y = Math.PI / 2;
 fondo.receiveShadow = true;
 
@@ -302,7 +351,9 @@ const tvPantalla = new THREE.Mesh(
     new THREE.MeshStandardMaterial({
         map: netflixTexture,
         emissive: 0xffffff,
-        emissive: 0x111111
+        emissive: 0x111111,
+        roughness: 0.2,              // Un poco de brillo especular
+        metalness: 0
     })
 );
 
@@ -321,6 +372,9 @@ const soporteTV = new THREE.Mesh(
 
 soporteTV.position.set(0, 220, 480);
 scene.add(soporteTV);
+
+
+
 
 //----------------------------------------------------------------------------------------
 //cuadros
@@ -898,13 +952,13 @@ scene.add(mesita);
 const vidriom = new THREE.Mesh(
     new THREE.BoxGeometry(870, 5, 1000),
     new THREE.MeshStandardMaterial({
-        color: 0xffffff, // Vidrio más claro (blanco puro)
+        color: 0x00ff00,
         transparent: true,
-        opacity: 0.2,    // Más transparente para mayor elegancia
-        roughness: 0.05,  // Superficie perfecta, como un espejo
+        opacity: 0.2,
+        roughness: 0.05,
         metalness: 0,
-        ior: 1.5,        // Índice de refracción real para el vidrio
-        transmission: 1.0      // Añade un toque de brillo
+        ior: 1.5,
+        transmission: 1.0
     })
 );
 
@@ -912,7 +966,6 @@ vidriom.position.set(100, 72, 0);
 vidriom.scale.set(0.2, 13, 0.2);
 vidriom.receiveShadow = true;
 scene.add(vidriom);
-
 
 //----------------------------------------------------------------------------------------------
 
@@ -924,7 +977,7 @@ const loaderdart = new FBXLoader();
 
 loaderdart.load("./Dart.fbx", function (object1) {
     object1.scale.set(0.4, 0.4, 0.2);
-    object1.position.set(50, 60, 0);
+    object1.position.set(50, 50, 0);
     object1.rotation.set(0, 0, 0);
 
     object1.traverse(function (child) {
@@ -946,8 +999,24 @@ loaderdart.load("./Dart.fbx", function (object1) {
 });
 
 
+// LUZ SPOTLIGHT
+const spotLight = new THREE.SpotLight(0x00ff00, 15000); // Subimos intensidad
 
+// Posicionamos la luz ARRIBA del dardo (Dardo Y=50, Luz Y=120)
+spotLight.position.set(50, 0, 0);
 
+// Apuntamos exactamente al dardo
+spotLight.target.position.set(50, 500, 0);
+
+spotLight.angle = Math.PI / 3;
+spotLight.penumbra = 0.3;
+spotLight.decay = 1;
+spotLight.distance = 500;
+
+spotLight.castShadow = true;
+
+scene.add(spotLight);
+scene.add(spotLight.target);
 
 
 //----------------------------------------------------------------------------------------
@@ -960,23 +1029,23 @@ const texturaCuero = loader.load('cuero.jpg');
 
 texturaCuero.wrapS = THREE.RepeatWrapping;
 texturaCuero.wrapT = THREE.RepeatWrapping;
-texturaCuero.repeat.set(2, 2); 
+texturaCuero.repeat.set(2, 2);
 
 
 const matNegro = new THREE.MeshStandardMaterial({ color: 0x111111, metalness: 0.2, roughness: 0.3 });
 const matMetal = new THREE.MeshStandardMaterial({ color: 0x555555, metalness: 0.8, roughness: 0.2 });
-const matNeon = new THREE.MeshStandardMaterial({ 
-    color: 0x00ffff, 
-    emissive: 0x00ffff, 
-    emissiveIntensity: 0.1 
+const matNeon = new THREE.MeshStandardMaterial({
+    color: 0x00ffff,
+    emissive: 0x00ffff,
+    emissiveIntensity: 0.1
 });
 
 // Material Pro con la textura aplicada
 const materialCuero = new THREE.MeshStandardMaterial({
     map: texturaCuero,
-    color: 0x222222, 
-    roughness: 0.8, 
-    metalness: 0.1 
+    color: 0x222222,
+    roughness: 0.8,
+    metalness: 0.1
 });
 
 // --- GRUPO SILLA ---
@@ -1053,6 +1122,8 @@ grupoSilla.add(cojin);
 
 
 //-----------------------------------------------------------------------------------------
+
+//-------------------------------------------------------------------------------------------
 //ANIMACION
 
 controls.target.set(0, 20, 0);
@@ -1060,7 +1131,9 @@ function animate() {
 
     requestAnimationFrame(animate);
 
-
+    if (demoModel) {
+    demoModel.rotation.y += 0.01;
+}
     controls.update();
     renderer.render(scene, camera);
 }
