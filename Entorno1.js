@@ -57,7 +57,7 @@ for (let i = 0; i < 8; i++) {
 // FILA DE ABAJO
 for (let i = 0; i < 8; i++) {
     const luzNavidad = new THREE.PointLight(coloresLuces[i % coloresLuces.length], 50000, 300);
-    luzNavidad.position.set(-350 + (i * 100), 180, -490); // altura más baja
+    luzNavidad.position.set(-350 + (i * 100), 180, -490); 
     scene.add(luzNavidad);
 
     const focoGeo = new THREE.SphereGeometry(5, 16, 16);
@@ -77,6 +77,7 @@ const netflixTexture = loader.load('netflix.jpg');
 
 const StrangerTexture = loader.load('Stranger.jpg');
 const tapizTexture = loader.load('tapiz.jpg');
+const sofa1Texture = loader.load('sofa1.jpg');
 //--------------------------------------------------------------------------------------
 //GEOMETRIAS
 
@@ -573,14 +574,16 @@ baseMonitor2.rotation.y = 30;
 scene.add(baseMonitor2);
 
 //-------------------------------------------------------------------------------------
-// SOFA
+/* SOFA
 const sofa = new THREE.Group();
 
 // ------------------
 // base del sofa
 const base = new THREE.Mesh(
     new THREE.BoxGeometry(160, 20, 80),
-    new THREE.MeshStandardMaterial({ color: 0x444444 })
+    new THREE.MeshStandardMaterial({
+        roughness: 1
+    })
 );
 
 base.position.y = 20;
@@ -590,7 +593,10 @@ sofa.add(base);
 // respaldo
 const respaldo = new THREE.Mesh(
     new THREE.BoxGeometry(160, 60, 15),
-    new THREE.MeshStandardMaterial({ color: 0x444444 })
+    new THREE.MeshStandardMaterial({
+        map: sofa1Texture,
+        roughness: 1
+    })
 );
 
 respaldo.position.set(0, 55, -32);
@@ -601,7 +607,10 @@ sofa.add(respaldo);
 // brazo izquierdo
 const brazo1 = new THREE.Mesh(
     new THREE.BoxGeometry(15, 40, 80),
-    new THREE.MeshStandardMaterial({ color: 0x333333 })
+    new THREE.MeshStandardMaterial({
+        color: 0x1f1f1f,
+        roughness: 1
+    })
 );
 
 brazo1.position.set(-80, 40, 0);
@@ -612,7 +621,10 @@ sofa.add(brazo1);
 // brazo derecho
 const brazo2 = new THREE.Mesh(
     new THREE.BoxGeometry(15, 40, 80),
-    new THREE.MeshStandardMaterial({ color: 0x333333 })
+    new THREE.MeshStandardMaterial({
+        color: 0x1f1f1f,
+        roughness: 1
+    })
 );
 
 brazo2.position.set(80, 40, 0);
@@ -623,7 +635,10 @@ sofa.add(brazo2);
 // cojines
 const cojin1 = new THREE.Mesh(
     new THREE.BoxGeometry(48, 15, 70),
-    new THREE.MeshStandardMaterial({ color: 0x666666 })
+    new THREE.MeshStandardMaterial({
+        color: 0x6b6b6b,
+        roughness: 0.7
+    })
 );
 
 cojin1.position.set(-50, 38, 0);
@@ -631,7 +646,10 @@ sofa.add(cojin1);
 
 const cojin2 = new THREE.Mesh(
     new THREE.BoxGeometry(48, 15, 70),
-    new THREE.MeshStandardMaterial({ color: 0x666666 })
+    new THREE.MeshStandardMaterial({
+        color: 0x6b6b6b,
+        roughness: 0.7
+    })
 );
 
 cojin2.position.set(0, 38, 0);
@@ -639,7 +657,10 @@ sofa.add(cojin2);
 
 const cojin3 = new THREE.Mesh(
     new THREE.BoxGeometry(48, 15, 70),
-    new THREE.MeshStandardMaterial({ color: 0x666666 })
+    new THREE.MeshStandardMaterial({
+        color: 0x6b6b6b,
+        roughness: 0.7
+    })
 );
 
 cojin3.position.set(50, 38, 0);
@@ -649,6 +670,45 @@ sofa.add(cojin3);
 sofa.position.set(90, -15, -380);
 sofa.scale.set(2.5, 2.5, 2.5);
 scene.add(sofa);
+
+*/
+
+// Cargar modelo sofa
+const loader1 = new FBXLoader();
+const textureLoader1 = new THREE.TextureLoader();
+const texture1 = textureLoader1.load("./texturas/metalverde.jpg");
+
+loader1.load("./sofa.fbx", function (object1) {
+
+    
+    // misma escala del sofá anterior
+    object1.scale.set(36, 36, 36);
+
+
+
+    // misma posición del sofá anterior
+    object1.position.set(-1400, 0, 2320);
+
+     object1.rotation.set(0, -7.9, 0);
+    // misma rotación
+ 
+    object1.traverse(function (child) {
+        if (child.isMesh) {
+            child.material = new THREE.MeshStandardMaterial({
+                color: 0xFA0000,
+                map: texture1,
+                metalness: 0.2,
+                roughness: 0.9
+            });
+
+            child.castShadow = true;
+            child.receiveShadow = true;
+        }
+    });
+
+    scene.add(object1);
+})
+
 
 //----------------------------------------------------------------------------------------
 //alfombra
