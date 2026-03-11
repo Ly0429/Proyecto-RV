@@ -112,12 +112,13 @@ pared1.receiveShadow = true;
 
 scene.add(pared1);
 
-
+pared1.material.emissive = new THREE.Color(0x808080);
+pared1.material.emissiveIntensity = 0.2;
 //--------------------------------------------------------------------------------------
 // stranger
 
 const stranger = new THREE.Mesh(
-    new THREE.PlaneGeometry(878, 292, 5),
+    new THREE.PlaneGeometry(878, 282, 5),
     new THREE.MeshStandardMaterial({
         map: StrangerTexture,
         roughness: 0.3
@@ -145,7 +146,7 @@ const tapiz = new THREE.Mesh(
     })
 );
 
-tapiz.position.set(0, 50, -496); // atrás de la escena
+tapiz.position.set(0, 55, -496); // atrás de la escena
 tapiz.receiveShadow = true;
 
 scene.add(tapiz);
@@ -172,6 +173,48 @@ scene.add(pared2);
 
 pared2.material.emissive = new THREE.Color(0x808080);
 pared2.material.emissiveIntensity = 0.2;
+//--------------------------------------------------------------------------------
+// tapiz
+
+const tapiz2 = new THREE.Mesh(
+    new THREE.PlaneGeometry(878, 110, 5),
+    new THREE.MeshStandardMaterial({
+        map: tapizTexture,
+        color: 0x472828,
+        roughness: 0.9
+    })
+);
+
+tapiz2.position.set(0, 55, 490); 
+tapiz2.rotation.y = Math.PI;
+tapiz2.receiveShadow = true;
+
+scene.add(tapiz2);
+
+tapizTexture.wrapS = THREE.RepeatWrapping;
+tapizTexture.wrapT = THREE.RepeatWrapping;
+tapizTexture.repeat.set(5, 1);
+//-------------------------------------------------------------------------------------
+//fondo 2
+const paredTexture2 = loader.load('pared.jpg');
+
+const fondo2 = new THREE.Mesh(
+    new THREE.PlaneGeometry(878, 283, 5),
+    new THREE.MeshStandardMaterial({
+        map: paredTexture2,
+        roughness: 0.3
+    })
+);
+
+fondo2.position.set(0, 256, 490); 
+fondo2.rotation.y = Math.PI;
+fondo2.receiveShadow = true;
+
+scene.add(fondo2);
+
+paredTexture2.wrapS = THREE.RepeatWrapping;
+paredTexture2.wrapT = THREE.RepeatWrapping;
+paredTexture2.repeat.set(1, 1);
 
 //--------------------------------------------------------------------------------------
 
@@ -192,6 +235,49 @@ scene.add(Pared3)
 
 Pared3.material.emissive = new THREE.Color(0x808080);
 Pared3.material.emissiveIntensity = 0.2;
+//-----------------------------------------------------------------------
+// tapiz
+
+const tapiz3 = new THREE.Mesh(
+    new THREE.PlaneGeometry(1000, 110, 5),
+    new THREE.MeshStandardMaterial({
+        map: tapizTexture,
+        color: 0x472828,
+        roughness: 0.9
+    })
+);
+
+tapiz3.position.set(-430, 55, 0); 
+tapiz3.rotation.y = Math.PI / 2;
+tapiz3.receiveShadow = true;
+
+scene.add(tapiz3);
+
+tapizTexture.wrapS = THREE.RepeatWrapping;
+tapizTexture.wrapT = THREE.RepeatWrapping;
+tapizTexture.repeat.set(5, 1);
+//---------------------------------------------------------------------------------------
+//fondo
+const paredTexture = loader.load('pared.jpg');
+
+const fondo = new THREE.Mesh(
+    new THREE.PlaneGeometry(1000, 283, 5),
+    new THREE.MeshStandardMaterial({
+        map: paredTexture,
+        roughness: 0.3
+    })
+);
+
+fondo.position.set(-430, 256, 0); 
+fondo.rotation.y = Math.PI / 2;
+fondo.receiveShadow = true;
+
+scene.add(fondo);
+
+paredTexture.wrapS = THREE.RepeatWrapping;
+paredTexture.wrapT = THREE.RepeatWrapping;
+paredTexture.repeat.set(1, 1);
+
 //----------------------------------------------------------------------------------------
 
 // TV
@@ -876,13 +962,13 @@ texturaCuero.wrapS = THREE.RepeatWrapping;
 texturaCuero.wrapT = THREE.RepeatWrapping;
 texturaCuero.repeat.set(2, 2); 
 
-// --- MATERIALES ---
+
 const matNegro = new THREE.MeshStandardMaterial({ color: 0x111111, metalness: 0.2, roughness: 0.3 });
 const matMetal = new THREE.MeshStandardMaterial({ color: 0x555555, metalness: 0.8, roughness: 0.2 });
 const matNeon = new THREE.MeshStandardMaterial({ 
     color: 0x00ffff, 
     emissive: 0x00ffff, 
-    emissiveIntensity: 1 
+    emissiveIntensity: 0.1 
 });
 
 // Material Pro con la textura aplicada
